@@ -75,7 +75,7 @@ public class SpellCheckerController {
     	if(box.getValue()==null)
     		txtResult.setText("Choose a language!");
     	
-    	String text = new String(txtInput.getText().trim().toLowerCase());
+    	String text = new String(txtInput.getText().trim().toLowerCase().replaceAll("[^a-z]"," "));
     	for(int i =0 ; i<text.length() ; i++)
     	{  if(Character.isLetter(text.charAt(i))==false &&
     	
