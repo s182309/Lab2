@@ -18,9 +18,11 @@ public class Main extends Application {
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
-			Dictionary model = new Dictionary();
-			SpellCheckerController contr = loader.getController();
-			contr.setDictionary(model);
+			EnglishDictionary eng= new EnglishDictionary();
+			ItalianDictionary ita = new ItalianDictionary();
+			
+		  SpellCheckerController contr = loader.getController();
+		  contr.setModel(eng , ita);
 			
 			
 		} catch(Exception e) {

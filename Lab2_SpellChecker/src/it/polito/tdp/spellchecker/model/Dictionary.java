@@ -1,13 +1,15 @@
 package it.polito.tdp.spellchecker.model;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 public class Dictionary {
-	protected List <String> dictionary;
+	protected Set <String> dictionary;
 
 	public Dictionary() {
-		dictionary = new LinkedList <String> ();
+		dictionary = new HashSet <String> ();
 	}
 	
 
