@@ -123,6 +123,32 @@ public class SpellCheckerController {
     		if(r.isCorrect()==false)
     			output += r.getWord()+" ";
     			} 
+    	
+    	 	if(output.length()==0){
+    	 		txtResult.setTextFill(Color.BLACK);
+    	 		txtResult.setText("Your text is correct!");
+        		}
+        		else{
+        			
+        			txtResult.setTextFill(Color.RED);
+        			txtResult.setText("Your text contains errors !");
+        
+        		}
+        	
+        	fin = System.nanoTime() / 1e9 ;
+        	
+         //  txtOutput.setText(output);
+        	
+        	txtOutput.setVisible(true);
+        	
+        	
+        	double time = (double) fin-start   ;
+        	 // DecimalFormat (di default arrotondamento in stile Math.rint())
+            DecimalFormat decForm = new DecimalFormat("#.######", new DecimalFormatSymbols());
+            decForm.setRoundingMode(RoundingMode.CEILING); // solo da JAVA 6 in poi
+             
+        	txtTime.setText("Spell check completed in " + decForm.format(time) + " seconds.");
+        	return;
     		
     	}
     	
@@ -149,30 +175,33 @@ public class SpellCheckerController {
     			txtOutput.getChildren().add(txt);
     		}
     	
+
+    	 	if(output.length()==0){
+        		txtResult.setText("Il tuo testo è corretto!");
+        		txtResult.setTextFill(Color.BLACK);}
+        		else{
+        			
+        			txtResult.setTextFill(Color.RED);
+        			txtResult.setText("Il tuo testo contiene errori !");
+        
+        		}
+        	
+        	fin = System.nanoTime() / 1e9 ;
+        	
+         //  txtOutput.setText(output);
+        	
+        	txtOutput.setVisible(true);
+        	
+        	
+        	double time = (double) fin-start   ;
+        	 // DecimalFormat (di default arrotondamento in stile Math.rint())
+            DecimalFormat decForm = new DecimalFormat("#.######", new DecimalFormatSymbols());
+            decForm.setRoundingMode(RoundingMode.CEILING); // solo da JAVA 6 in poi
+             
+        	txtTime.setText("Spell check completato in " + decForm.format(time) + " secondi.");
+        	return;
     	}
-    	if(output.length()==0)
-    		txtResult.setText("Your text is correct!");
-    		else{
-    			
-    			txtResult.setTextFill(Color.RED);
-    			txtResult.setText("Your text contains errors !");
-    
-    		}
-    	
-    	fin = System.nanoTime() / 1e9 ;
-    	
-     //  txtOutput.setText(output);
-    	
-    	txtOutput.setVisible(true);
-    	
-    	
-    	double time = (double) fin-start   ;
-    	 // DecimalFormat (di default arrotondamento in stile Math.rint())
-        DecimalFormat decForm = new DecimalFormat("#.######", new DecimalFormatSymbols());
-        decForm.setRoundingMode(RoundingMode.CEILING); // solo da JAVA 6 in poi
-         
-    	txtTime.setText("Spell check completed in " + decForm.format(time) + " seconds.");
-    	return;
+   
 
     }
 
