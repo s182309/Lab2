@@ -35,7 +35,7 @@ public class SpellCheckerController {
     private TextArea txtInput;
 
     @FXML
-    private TextArea txtOutput;
+    private TextFlow txtOutput;
 
     @FXML
     private Label txtResult;
@@ -74,43 +74,55 @@ public class SpellCheckerController {
     @FXML
     void doClearText(ActionEvent event) {
     	txtInput.setText("");
-    	txtOutput.setText("");
+    	txtOutput.getChildren().clear();
+    //	txtOutput.setText("");
 
     }
 
     @FXML
     void doSpellCheck(ActionEvent event) {
+    	
     	double start = System.nanoTime() /1e9;
     	double fin = 0.0 ;
+    	txtOutput.getChildren().clear();
+    	txtOutput.setVisible(false);
+    	
     	if(box.getValue()==null) {
     		txtResult.setText("Choose a language!");
     	     return;}
     	
     	String text = new String(txtInput.getText().trim().toLowerCase());
-    	for(int i =0 ; i<text.length() ; i++)
-    	{  if(Character.isLetter(text.charAt(i))==false &&
     	
-    			Character.isWhitespace(text.charAt(i)) == false &&
-    			String.valueOf(text.charAt(i)).matches("[[:punct:]]")== false)
+    	for(int i =0 ; i<text.length() ; i++)
+    	{  if(Character.isDigit(text.charAt(i))  ) {
     		txtResult.setText("Wrong Format!");
+    		return;}
+    	
     	}
     	
     	List <String> param = new LinkedList <String>();
     	List <RichWord> result = new LinkedList <RichWord> ();
     	String output = "";
+    	
+    	
     	if(box.getValue()=="English"){
     		StringTokenizer st = new StringTokenizer(text);
     		while(st.hasMoreTokens())
     		{  String token = st.nextToken();
-    			
-    				param.add(token);
+    					param.add(token.replaceAll("[^a-zA-Z]", ""));
     			
     		}
     		result = english.spellCheckText(param);
-    		for(RichWord r : result)
-    		{if(r.isCorrect()==false)
+    		for(RichWord r : result){
+    		       //parte relativa al txtflow...l'outuput mi serve solo per capire se la stringa degli errori e' vuota
+        		Text txt = new Text(r.getWord()+" ");
+        			if(r.isCorrect()==false)
+        			txt.setFill(Color.RED);
+        			txtOutput.getChildren().add(txt);
+    		
+    		if(r.isCorrect()==false)
     			output += r.getWord()+" ";
-    			}
+    			} 
     		
     	}
     	
@@ -119,28 +131,39 @@ public class SpellCheckerController {
     		while(st.hasMoreTokens())
     		{  String token = st.nextToken();
     			
-    				param.add(token);
+    				param.add(token.replaceAll("[^a-zA-Z]", ""));
     			
     		}
     		result = italian.spellCheckText(param);
     		
     		
-    		for(RichWord r : result)
-    		{if(r.isCorrect()==false)
-    			output += r.getWord()+" ";
-    			}
     		
+    		for(RichWord r : result) {
+    		if(r.isCorrect()==false)
+    			output += r.getWord()+" ";
+    			
+                //parte relativa al txtflow...l'outuput mi serve solo per capire se la stringa degli errori e' vuota
+    		Text txt = new Text(r.getWord()+" ");
+    			if(r.isCorrect()==false)
+    			txt.setFill(Color.RED);
+    			txtOutput.getChildren().add(txt);
+    		}
     	
     	}
     	if(output.length()==0)
     		txtResult.setText("Your text is correct!");
-    		else
+    		else{
+    			
+    			txtResult.setTextFill(Color.RED);
     			txtResult.setText("Your text contains errors !");
-        fin = System.nanoTime() / 1e9 ;
+    
+    		}
     	
-       txtOutput.setText(output);
+    	fin = System.nanoTime() / 1e9 ;
     	
+     //  txtOutput.setText(output);
     	
+    	txtOutput.setVisible(true);
     	
     	
     	double time = (double) fin-start   ;
