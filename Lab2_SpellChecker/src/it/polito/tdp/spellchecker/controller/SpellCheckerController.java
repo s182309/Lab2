@@ -2,7 +2,10 @@ package it.polito.tdp.spellchecker.controller;
 
 
 import java.util.List;
+import java.math.RoundingMode;
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
@@ -13,6 +16,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 public class SpellCheckerController {
 
@@ -36,7 +42,9 @@ public class SpellCheckerController {
 
     @FXML
     private Label txtTime;
-   private EnglishDictionary english; 
+  
+    
+    private EnglishDictionary english; 
    private ItalianDictionary italian;
    
     
@@ -72,15 +80,18 @@ public class SpellCheckerController {
 
     @FXML
     void doSpellCheck(ActionEvent event) {
-    	if(box.getValue()==null)
+    	double start = System.nanoTime() /1e9;
+    	double fin = 0.0 ;
+    	if(box.getValue()==null) {
     		txtResult.setText("Choose a language!");
+    	     return;}
     	
-    	String text = new String(txtInput.getText().trim().toLowerCase().replaceAll("[^a-z]"," "));
+    	String text = new String(txtInput.getText().trim().toLowerCase());
     	for(int i =0 ; i<text.length() ; i++)
     	{  if(Character.isLetter(text.charAt(i))==false &&
     	
     			Character.isWhitespace(text.charAt(i)) == false &&
-    			String.valueOf(text.charAt(i)).matches("[\\p{Punct}]")== false)
+    			String.valueOf(text.charAt(i)).matches("[[:punct:]]")== false)
     		txtResult.setText("Wrong Format!");
     	}
     	
@@ -112,14 +123,33 @@ public class SpellCheckerController {
     			
     		}
     		result = italian.spellCheckText(param);
+    		
+    		
     		for(RichWord r : result)
     		{if(r.isCorrect()==false)
     			output += r.getWord()+" ";
     			}
     		
-    	}
     	
-    	txtOutput.setText(output);
+    	}
+    	if(output.length()==0)
+    		txtResult.setText("Your text is correct!");
+    		else
+    			txtResult.setText("Your text contains errors !");
+        fin = System.nanoTime() / 1e9 ;
+    	
+       txtOutput.setText(output);
+    	
+    	
+    	
+    	
+    	double time = (double) fin-start   ;
+    	 // DecimalFormat (di default arrotondamento in stile Math.rint())
+        DecimalFormat decForm = new DecimalFormat("#.######", new DecimalFormatSymbols());
+        decForm.setRoundingMode(RoundingMode.CEILING); // solo da JAVA 6 in poi
+         
+    	txtTime.setText("Spell check completed in " + decForm.format(time) + " seconds.");
+    	return;
 
     }
 
