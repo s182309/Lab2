@@ -26,25 +26,31 @@ public class DictionaryDAO {
 		try {
 			Connection conn = DriverManager.getConnection(jdbcURL);
 			Statement st = conn.createStatement();
+			
 			for(String s : inputTextList) {
 			String sql = "select id from parola where nome=\"" + s +"\"" ;
 			ResultSet res= st.executeQuery(sql);
 			RichWord temp = new RichWord (s);
+			
 			if (res.next()){
 				//parola corretta
 				
 				temp.setCorrect(true);
+			
 			}
 			else{
 				//parola non corretta
 				temp.setCorrect(false);
 				}
 			
-			list.add(temp);
+			list.add(temp); 
 			
+			res.close(); }
 			
+	        
+			conn.close();
 			
-			                          }
+			                          
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
