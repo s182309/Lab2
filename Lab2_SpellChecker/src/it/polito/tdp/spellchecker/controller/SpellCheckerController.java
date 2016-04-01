@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
+import it.polito.tdp.spellchecker.db.DictionaryDAO;
 import it.polito.tdp.spellchecker.model.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -45,10 +46,10 @@ public class SpellCheckerController {
   
     
     private EnglishDictionary english; 
-   private ItalianDictionary italian;
+   private DictionaryDAO italian;
    
     
-    public void setModel( EnglishDictionary eng , ItalianDictionary ita){
+    public void setModel( EnglishDictionary eng , DictionaryDAO ita){
     	english = eng;
     	italian = ita;
     	}
@@ -61,13 +62,7 @@ public class SpellCheckerController {
     		if(car==false)
     			txtResult.setText("File Error! Try to choose the language again");
     	}
-    	else{
-    		
-    		boolean car = italian.loadDictionary();
-    		if(car==false)
-    			txtResult.setText("File Error! Try to choose the language again");
-    	}
-    		
+    	
 
     }
 
@@ -75,6 +70,8 @@ public class SpellCheckerController {
     void doClearText(ActionEvent event) {
     	txtInput.setText("");
     	txtOutput.getChildren().clear();
+    	txtResult.setText("");
+    	txtTime.setText("");
     //	txtOutput.setText("");
 
     }
@@ -84,6 +81,10 @@ public class SpellCheckerController {
     	
     	double start = System.nanoTime() /1e9;
     	double fin = 0.0 ;
+    	List <String> param = new LinkedList <String>();
+    	List <RichWord> result = new LinkedList <RichWord> ();
+    	String output = "";
+    	
     	txtOutput.getChildren().clear();
     	txtOutput.setVisible(false);
     	
@@ -100,16 +101,12 @@ public class SpellCheckerController {
     	
     	}
     	
-    	List <String> param = new LinkedList <String>();
-    	List <RichWord> result = new LinkedList <RichWord> ();
-    	String output = "";
-    	
     	
     	if(box.getValue()=="English"){
     		StringTokenizer st = new StringTokenizer(text);
     		while(st.hasMoreTokens())
     		{  String token = st.nextToken();
-    					param.add(token.replaceAll("[^a-zA-Z]", ""));
+    					param.add(token.replaceAll("[^a-zA-Z]", " ").trim());
     			
     		}
     		result = english.spellCheckText(param);
@@ -152,12 +149,15 @@ public class SpellCheckerController {
     		
     	}
     	
-    	if(box.getValue()=="Italian"){
+    	//(box.getValue()=="Italian")
+    	else if (box.getValue()=="Italian"){
+    		/*txtOutput.getChildren().clear();
+        	txtOutput.setVisible(false);*/
     		StringTokenizer st = new StringTokenizer(text);
     		while(st.hasMoreTokens())
     		{  String token = st.nextToken();
     			
-    				param.add(token.replaceAll("[^a-zA-Z]", ""));
+    				param.add(token.replaceAll("[^a-zA-Z]", " ").trim());
     			
     		}
     		result = italian.spellCheckText(param);
@@ -199,9 +199,12 @@ public class SpellCheckerController {
             decForm.setRoundingMode(RoundingMode.CEILING); // solo da JAVA 6 in poi
              
         	txtTime.setText("Spell check completato in " + decForm.format(time) + " secondi.");
-        	return;
-    	}
-   
+        	
+        	}
+    	
+    	
+    	
+   return;
 
     }
 

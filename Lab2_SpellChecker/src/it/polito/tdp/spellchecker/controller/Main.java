@@ -1,5 +1,6 @@
 package it.polito.tdp.spellchecker.controller;
 	
+import it.polito.tdp.spellchecker.db.DictionaryDAO;
 import it.polito.tdp.spellchecker.model.*;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -19,7 +20,7 @@ public class Main extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 			EnglishDictionary eng= new EnglishDictionary();
-			ItalianDictionary ita = new ItalianDictionary();
+			DictionaryDAO ita = new DictionaryDAO();
 			
 		  SpellCheckerController contr = loader.getController();
 		  contr.setModel(eng , ita);
