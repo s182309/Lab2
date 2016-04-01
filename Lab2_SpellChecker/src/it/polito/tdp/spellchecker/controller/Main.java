@@ -20,7 +20,7 @@ public class Main extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 			EnglishDictionary eng= new EnglishDictionary();
-			DictionaryDAO ita = new DictionaryDAO();
+			ItalianDictionary ita = new ItalianDictionary();
 			
 		  SpellCheckerController contr = loader.getController();
 		  contr.setModel(eng , ita);

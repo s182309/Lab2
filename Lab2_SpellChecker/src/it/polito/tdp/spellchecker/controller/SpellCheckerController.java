@@ -46,10 +46,10 @@ public class SpellCheckerController {
   
     
     private EnglishDictionary english; 
-   private DictionaryDAO italian;
+   private ItalianDictionary italian;
    
     
-    public void setModel( EnglishDictionary eng , DictionaryDAO ita){
+    public void setModel( EnglishDictionary eng , ItalianDictionary ita){
     	english = eng;
     	italian = ita;
     	}
@@ -62,7 +62,12 @@ public class SpellCheckerController {
     		if(car==false)
     			txtResult.setText("File Error! Try to choose the language again");
     	}
-    	
+           
+    		if(box.getValue().compareTo("italian")==0) {
+            boolean car = italian.loadDictionary();
+    		if(car==false)
+    			txtResult.setText("File Error! Try to choose the language again");
+    	}
 
     }
 
@@ -150,39 +155,33 @@ public class SpellCheckerController {
     	}
     	
     	//(box.getValue()=="Italian")
-    	else if (box.getValue()=="Italian"){
-    		/*txtOutput.getChildren().clear();
-        	txtOutput.setVisible(false);*/
+    	if(box.getValue()=="Italian"){
     		StringTokenizer st = new StringTokenizer(text);
     		while(st.hasMoreTokens())
     		{  String token = st.nextToken();
-    			
-    				param.add(token.replaceAll("[^a-zA-Z]", " ").trim());
+    					param.add(token.replaceAll("[^a-zA-Z]", " ").trim());
     			
     		}
     		result = italian.spellCheckText(param);
+    		for(RichWord r : result){
+    		       //parte relativa al txtflow...l'outuput mi serve solo per capire se la stringa degli errori e' vuota
+        		Text txt = new Text(r.getWord()+" ");
+        			if(r.isCorrect()==false)
+        			txt.setFill(Color.RED);
+        			txtOutput.getChildren().add(txt);
     		
-    		
-    		
-    		for(RichWord r : result) {
     		if(r.isCorrect()==false)
     			output += r.getWord()+" ";
-    			
-                //parte relativa al txtflow...l'outuput mi serve solo per capire se la stringa degli errori e' vuota
-    		Text txt = new Text(r.getWord()+" ");
-    			if(r.isCorrect()==false)
-    			txt.setFill(Color.RED);
-    			txtOutput.getChildren().add(txt);
-    		}
+    			} 
     	
-
     	 	if(output.length()==0){
-        		txtResult.setText("Il tuo testo è corretto!");
-        		txtResult.setTextFill(Color.BLACK);}
+    	 		txtResult.setTextFill(Color.BLACK);
+    	 		txtResult.setText("Il tuo testo è corretto!");
+        		}
         		else{
         			
         			txtResult.setTextFill(Color.RED);
-        			txtResult.setText("Il tuo testo contiene errori !");
+        			txtResult.setText("Il tuo testo contiene errori!");
         
         		}
         	
@@ -199,8 +198,9 @@ public class SpellCheckerController {
             decForm.setRoundingMode(RoundingMode.CEILING); // solo da JAVA 6 in poi
              
         	txtTime.setText("Spell check completato in " + decForm.format(time) + " secondi.");
-        	
-        	}
+        	return;
+    		
+    	}
     	
     	
     	

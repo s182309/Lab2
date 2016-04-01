@@ -1,12 +1,17 @@
 package it.polito.tdp.spellchecker.model;
 
 import java.io.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import java.util.StringTokenizer;
 
 public class ItalianDictionary extends Dictionary{
 	
-	
+	private String jdbcURL = "jdbc:mysql://localhost/dizionario?user=root&password=root";
 	
 	public ItalianDictionary() {
 		super();
@@ -15,19 +20,21 @@ public class ItalianDictionary extends Dictionary{
 
 	public boolean loadDictionary(){
 		try{
-			FileReader fr = new FileReader ("rsc/Italian.txt");
-			BufferedReader br = new BufferedReader(fr);
-			String line;
-			while( (line = br.readLine()) !=null){
-				StringTokenizer st = new StringTokenizer(line);
-				dictionary.add(st.nextToken().trim().toLowerCase());
-				}
-			br.close();
-			fr.close();
-		}
-		catch(IOException e){
-		System.out.println("Errore nella lettura del file");
-			return false;
+			Connection conn = DriverManager.getConnection(jdbcURL);
+			Statement st = conn.createStatement();
+			
+			String sql = "select nome from parola";
+			ResultSet res = st.executeQuery(sql);
+			while(res.next()) {
+				String temp = res.getString("nome");
+				dictionary.add(temp.toLowerCase().trim());
+			}
+			res.close();
+			conn.close();
+			}
+		catch(SQLException e){
+		e.printStackTrace();
+		return false;
 		}
 		return true;
 		
